@@ -39,10 +39,6 @@ from modules.directory_scan import scan_directories
 # ── Proxy ──────────────────────────────────────
 from modules.proxy_manager import get_proxy_manager
 
-# ── Scoring & storage ──────────────────────────
-from scoring.risk_score import compute_score
-from storage.db import init_db, save_scan, get_scans, get_last_scan
-from storage.diff import diff_scans
 
 app = FastAPI(title="Ethical Hacking Toolkit API", version="3.3.0")
 app.add_middleware(
@@ -54,10 +50,6 @@ app.add_middleware(
 
 FULL_SCAN_TIMEOUT = 300
 
-
-@app.on_event("startup")
-async def startup():
-    await init_db()
 
 
 class TargetRequest(BaseModel):
