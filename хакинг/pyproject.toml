@@ -1,2 +1,0 @@
-[tool.vercel]
-entrypoint = "хакинг.server.main:app"
