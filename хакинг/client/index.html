@@ -1,0 +1,2097 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ethical Hacking Toolkit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-deep: #05060b;
+    --bg-base: #0a0d18;
+    --bg-card: rgba(19, 23, 40, 0.6);
+    --border-soft: rgba(148, 163, 184, 0.1);
+
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+
+    --cyan: #22d3ee;
+    --cyan-soft: #67e8f9;
+    --violet: #a855f7;
+    --pink: #ec4899;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --orange: #f97316;
+    --red: #ef4444;
+
+    --grad-main: linear-gradient(135deg, #22d3ee 0%, #a855f7 100%);
+    --grad-accent: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+    --grad-green: linear-gradient(135deg, #22c55e 0%, #22d3ee 100%);
+    --grad-warn: linear-gradient(135deg, #eab308 0%, #f97316 100%);
+    --grad-danger: linear-gradient(135deg, #ef4444 0%, #ec4899 100%);
+
+    --radius-sm: 8px;
+    --radius: 14px;
+    --radius-lg: 20px;
+  }
+
+  html, body { min-height: 100vh; }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before,
+  body::after {
+    content: '';
+    position: fixed;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::before {
+    background: radial-gradient(circle, #22d3ee 0%, transparent 70%);
+    top: -300px; left: -200px;
+    animation: float1 20s ease-in-out infinite;
+  }
+  body::after {
+    background: radial-gradient(circle, #a855f7 0%, transparent 70%);
+    bottom: -300px; right: -200px;
+    animation: float2 22s ease-in-out infinite;
+  }
+  @keyframes float1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(100px, 80px) scale(1.1); }
+  }
+  @keyframes float2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-120px, -100px) scale(1.15); }
+  }
+
+  .bg-orb {
+    position: fixed;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(circle, #ec4899 0%, transparent 70%);
+    top: 40%; left: 30%;
+    animation: float3 25s ease-in-out infinite;
+  }
+  @keyframes float3 {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(150px, -80px); }
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 22px 40px;
+    border-bottom: 1px solid var(--border-soft);
+    background: rgba(10, 13, 24, 0.6);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo { display: flex; align-items: center; gap: 14px; }
+  .logo-mark {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    background: var(--grad-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 8px 24px rgba(34, 211, 238, 0.35),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .logo h1 {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #f1f5f9 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .logo h1 .accent {
+    background: var(--grad-main);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .logo-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .version-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 100px;
+    background: rgba(34, 211, 238, 0.1);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    color: var(--cyan-soft);
+    letter-spacing: 0.05em;
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 34px 24px 80px;
+  }
+
+  .warn {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.08), rgba(249, 115, 22, 0.05));
+    border: 1px solid rgba(234, 179, 8, 0.25);
+    color: #fde68a;
+    font-size: 13px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .warn-icon { font-size: 18px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+  .warn b { color: #fef3c7; }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset,
+                0 20px 40px -20px rgba(0, 0, 0, 0.6);
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.5), transparent);
+  }
+
+  .card-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .input-wrapper { position: relative; }
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 16px;
+    pointer-events: none;
+  }
+  input[type=text] {
+    width: 100%;
+    padding: 15px 18px 15px 46px;
+    border-radius: var(--radius);
+    background: rgba(5, 6, 11, 0.6);
+    color: var(--text-primary);
+    border: 1px solid var(--border-soft);
+    font-size: 15px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    outline: none;
+    transition: all 0.25s ease;
+    letter-spacing: 0.01em;
+  }
+  input[type=text]::placeholder { color: var(--text-muted); font-weight: 400; }
+  input[type=text]:focus {
+    border-color: rgba(34, 211, 238, 0.5);
+    background: rgba(5, 6, 11, 0.9);
+    box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.1),
+                0 0 40px -10px rgba(34, 211, 238, 0.4);
+  }
+
+  .consent {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin: 18px 0 12px;
+    padding: 14px 16px;
+    background: rgba(5, 6, 11, 0.4);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+  .consent:hover {
+    border-color: rgba(34, 211, 238, 0.2);
+    background: rgba(5, 6, 11, 0.6);
+  }
+  .consent input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--text-muted);
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 1px;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+  .consent input:checked {
+    background: var(--grad-main);
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(34, 211, 238, 0.4);
+  }
+  .consent input:checked::after {
+    content: '✓';
+    position: absolute;
+    color: #05060b;
+    font-size: 13px;
+    font-weight: 800;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* ── Proxy panel ────────────────────────────── */
+  .proxy-panel { margin: 0 0 22px; }
+  .proxy-toggle {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    background: rgba(5, 6, 11, 0.4);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+  .proxy-toggle:hover {
+    border-color: rgba(168, 85, 247, 0.3);
+    background: rgba(5, 6, 11, 0.6);
+  }
+  .proxy-toggle input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--text-muted);
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 1px;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+  .proxy-toggle input:checked {
+    background: var(--grad-accent);
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+  }
+  .proxy-toggle input:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 13px;
+    font-weight: 800;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .proxy-hint {
+    display: block;
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 3px;
+    font-weight: 400;
+  }
+  .proxy-status {
+    margin-top: 12px;
+    padding: 14px 16px;
+    background: rgba(5, 6, 11, 0.5);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    font-size: 12px;
+  }
+  .proxy-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .proxy-item:last-child { border-bottom: none; }
+  .proxy-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .proxy-dot.alive {
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  .proxy-dot.dead {
+    background: var(--red);
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .proxy-url {
+    flex: 1;
+    color: var(--text-primary);
+    word-break: break-all;
+  }
+  .proxy-meta {
+    color: var(--text-muted);
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .proxy-summary {
+    padding: 8px 0;
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+  .proxy-summary .ok { color: #86efac; }
+  .proxy-summary .bad { color: #fca5a5; }
+
+  .buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+  button {
+    position: relative;
+    padding: 11px 18px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-soft);
+    background: rgba(19, 23, 40, 0.8);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+  }
+  button:hover {
+    color: var(--cyan-soft);
+    border-color: rgba(34, 211, 238, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px -8px rgba(34, 211, 238, 0.4);
+  }
+  button:active { transform: translateY(0); }
+
+  button.primary {
+    background: var(--grad-main);
+    color: #05060b;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 8px 24px -8px rgba(34, 211, 238, 0.6);
+  }
+  button.primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  button.primary:hover::before { opacity: 1; }
+  button.primary:hover {
+    color: #05060b;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px -8px rgba(34, 211, 238, 0.7);
+  }
+
+  button.accent {
+    background: var(--grad-accent);
+    color: white;
+    border: none;
+    font-weight: 600;
+    box-shadow: 0 8px 24px -8px rgba(168, 85, 247, 0.5);
+  }
+  button.accent:hover {
+    color: white;
+    box-shadow: 0 12px 32px -8px rgba(168, 85, 247, 0.7);
+  }
+
+  .loader-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 60px 20px;
+  }
+  .loader-ring {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent 0%, var(--cyan) 50%, var(--violet) 100%);
+    animation: spin 1s linear infinite;
+    position: relative;
+  }
+  .loader-ring::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: var(--bg-base);
+  }
+  .loader-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .score-hero {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.8);
+  }
+  .score-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.1), transparent 60%);
+    pointer-events: none;
+  }
+
+  .score-circle {
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    background: rgba(5, 6, 11, 0.8);
+  }
+  .score-circle::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    padding: 3px;
+    background: var(--grad-green);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+  .score-circle.green::before  { background: var(--grad-green); }
+  .score-circle.yellow::before { background: var(--grad-warn); }
+  .score-circle.orange::before { background: linear-gradient(135deg, #f97316, #ef4444); }
+  .score-circle.red::before    { background: var(--grad-danger); }
+
+  .score-circle.green .value {
+    background: var(--grad-green);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .score-circle.yellow .value {
+    background: var(--grad-warn);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .score-circle.orange .value {
+    background: linear-gradient(135deg, #f97316, #ef4444);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .score-circle.red .value {
+    background: var(--grad-danger);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { filter: brightness(1) drop-shadow(0 0 8px currentColor); }
+    50%      { filter: brightness(1.3) drop-shadow(0 0 20px currentColor); }
+  }
+
+  .score-circle .value {
+    font-size: 46px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .score-circle .max {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+
+  .score-info { flex: 1; min-width: 0; position: relative; z-index: 1; }
+  .score-info h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .score-info .rating {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .penalties {
+    font-size: 12px;
+    color: var(--text-secondary);
+    max-height: 140px;
+    overflow-y: auto;
+    padding-right: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .penalties::-webkit-scrollbar { width: 4px; }
+  .penalties::-webkit-scrollbar-track { background: transparent; }
+  .penalties::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.2);
+    border-radius: 4px;
+  }
+  .penalties .pen-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .penalties .pen-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 4px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+  .penalties .pen-item::before {
+    content: '−';
+    color: var(--red);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .critical-banner {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(236, 72, 153, 0.1));
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .critical-banner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--grad-danger);
+  }
+  .critical-banner h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fca5a5;
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .critical-banner .issue {
+    padding: 5px 0 5px 18px;
+    font-size: 12.5px;
+    color: #fecaca;
+    font-family: 'JetBrains Mono', monospace;
+    position: relative;
+  }
+  .critical-banner .issue::before {
+    content: '⚠';
+    position: absolute;
+    left: 0;
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  .diff-banner {
+    background: linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(168, 85, 247, 0.06));
+    border: 1px solid rgba(34, 211, 238, 0.25);
+    border-radius: var(--radius-lg);
+    padding: 22px 26px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+  }
+  .diff-banner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--grad-main);
+  }
+  .diff-banner h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--cyan-soft);
+    margin-bottom: 12px;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .diff-banner .change {
+    padding: 6px 0 6px 18px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+    position: relative;
+    border-bottom: 1px solid rgba(34, 211, 238, 0.08);
+  }
+  .diff-banner .change:last-child { border-bottom: none; }
+  .diff-banner .change::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--cyan);
+    font-weight: 700;
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .cat-card {
+    background: rgba(5, 6, 11, 0.6);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    text-align: center;
+  }
+  .cat-card .cat-name {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .cat-card .cat-value {
+    font-size: 20px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .cat-card .cat-value.ok { color: #86efac; }
+  .cat-card .cat-value.warn { color: #fcd34d; }
+  .cat-card .cat-value.bad { color: #fca5a5; }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 18px;
+    padding: 6px;
+    background: rgba(19, 23, 40, 0.5);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .tabs button {
+    font-size: 12px;
+    padding: 9px 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  .tabs button:hover {
+    color: var(--text-primary);
+    background: rgba(34, 211, 238, 0.08);
+    transform: none;
+    box-shadow: none;
+    border-color: transparent;
+  }
+  .tabs button.active {
+    background: var(--grad-main);
+    color: #05060b;
+    font-weight: 700;
+    box-shadow: 0 6px 18px -6px rgba(34, 211, 238, 0.6);
+  }
+
+  .section {
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    animation: fadeUp 0.4s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .section h3 .icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: rgba(34, 211, 238, 0.1);
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+    font-size: 13px;
+  }
+  .item:last-child { border-bottom: none; }
+  .item .key {
+    color: var(--text-muted);
+    min-width: 210px;
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    padding-top: 2px;
+  }
+  .item .val {
+    color: var(--text-primary);
+    word-break: break-word;
+    flex: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+  .item .val.ok   { color: #86efac; }
+  .item .val.bad  { color: #fca5a5; }
+  .item .val.warn { color: #fcd34d; }
+
+  .explain {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+
+  .summary {
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .summary::before {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .summary.good {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(34, 211, 238, 0.08));
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    color: #86efac;
+  }
+  .summary.good::before { content: '✓'; color: #22c55e; font-weight: 800; }
+  .summary.bad {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(236, 72, 153, 0.08));
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+  }
+  .summary.bad::before { content: '!'; color: #ef4444; font-weight: 800; }
+  .summary.warn {
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(249, 115, 22, 0.08));
+    border: 1px solid rgba(234, 179, 8, 0.25);
+    color: #fcd34d;
+  }
+  .summary.warn::before { content: '▲'; color: #eab308; font-weight: 800; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .chip {
+    background: rgba(5, 6, 11, 0.6);
+    border: 1px solid var(--border-soft);
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-secondary);
+    word-break: break-all;
+    transition: all 0.2s ease;
+  }
+  .chip:hover {
+    border-color: rgba(34, 211, 238, 0.3);
+    color: var(--cyan-soft);
+    background: rgba(34, 211, 238, 0.05);
+    transform: translateY(-1px);
+  }
+  .chip.highlight {
+    border-color: rgba(34, 211, 238, 0.4);
+    color: var(--cyan-soft);
+    background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.06));
+  }
+  .chip.bad {
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.08);
+  }
+  .chip.ok {
+    border-color: rgba(34, 197, 94, 0.3);
+    color: #86efac;
+  }
+
+  details.raw { margin-top: 20px; font-size: 13px; }
+  details.raw summary {
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 12px 0;
+    user-select: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    list-style: none;
+  }
+  details.raw summary::-webkit-details-marker { display: none; }
+  details.raw summary::before {
+    content: '▸ ';
+    display: inline-block;
+    transition: transform 0.2s;
+  }
+  details.raw[open] summary::before { transform: rotate(90deg); }
+  details.raw summary:hover { color: var(--cyan-soft); }
+  details.raw pre {
+    background: rgba(5, 6, 11, 0.8);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 18px;
+    overflow: auto;
+    max-height: 400px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  details.raw pre::-webkit-scrollbar { width: 8px; height: 8px; }
+  details.raw pre::-webkit-scrollbar-track { background: transparent; }
+  details.raw pre::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.2);
+    border-radius: 4px;
+  }
+
+  .error-box {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(236, 72, 153, 0.1));
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    color: #fca5a5;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .error-box::before {
+    content: '!';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--grad-danger);
+    color: white;
+    font-weight: 800;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 720px) {
+    header { padding: 16px 20px; }
+    .logo h1 { font-size: 16px; }
+    .logo-sub { display: none; }
+    main { padding: 20px 14px 60px; }
+    .card { padding: 20px; }
+    .score-hero {
+      flex-direction: column;
+      text-align: center;
+      gap: 20px;
+      padding: 24px 20px;
+    }
+    .score-circle { width: 120px; height: 120px; }
+    .score-circle .value { font-size: 36px; }
+    .score-info h2 { font-size: 18px; justify-content: center; }
+    .penalties { text-align: left; }
+    .item { flex-direction: column; gap: 4px; }
+    .item .key { min-width: auto; }
+    .tabs { overflow-x: auto; flex-wrap: nowrap; }
+    .tabs button { flex-shrink: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-orb"></div>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">🛡️</div>
+    <div>
+      <h1><span class="accent">Ethical</span> Hacking Toolkit</h1>
+      <div class="logo-sub">White-hat security scanner</div>
+    </div>
+  </div>
+  <div class="version-badge">v3.3</div>
+</header>
+
+<main>
+  <div class="warn">
+    <span class="warn-icon">⚠️</span>
+    <div>
+      Инструмент предназначен <b>исключительно</b> для тестирования собственных
+      ресурсов или ресурсов, на которые у вас есть <b>письменное разрешение</b>.
+    </div>
+  </div>
+
+  <div class="card">
+    <label class="card-label">Цель сканирования</label>
+    <div class="input-wrapper">
+      <span class="input-icon">🌐</span>
+      <input id="target" type="text" placeholder="example.com" autocomplete="off" spellcheck="false"/>
+    </div>
+
+    <label class="consent" for="consent">
+      <input id="consent" type="checkbox"/>
+      <span>Я подтверждаю, что имею <b>письменное разрешение</b> на тестирование этого ресурса и несу ответственность за свои действия.</span>
+    </label>
+
+    <!-- 🆕 Прокси -->
+    <div class="proxy-panel">
+      <label class="proxy-toggle" for="useProxy">
+        <input id="useProxy" type="checkbox" onchange="toggleProxy()"/>
+        <span>
+          <b>Использовать прокси</b>
+          <span class="proxy-hint">Все HTTP-проверки пойдут через пул прокси (ротация по порядку)</span>
+        </span>
+      </label>
+      <div id="proxyStatus" class="proxy-status" style="display:none;"></div>
+    </div>
+
+    <div class="buttons">
+      <button class="primary" onclick="run('full')">🔍 Полный скан</button>
+      <button onclick="run('ports')">Порты</button>
+      <button onclick="run('headers')">HTTP-заголовки</button>
+      <button onclick="run('ssl')">SSL</button>
+      <button onclick="run('dns')">DNS</button>
+      <button onclick="run('whois')">WHOIS</button>
+      <button onclick="run('subdomains')">Поддомены</button>
+      <button onclick="run('email')">Email</button>
+      <button onclick="run('waf')">WAF / CDN</button>
+      <button onclick="run('tech')">Технологии</button>
+      <button onclick="run('sensitive')">Файлы</button>
+      <button onclick="run('directories')">📂 Пути</button>
+      <button onclick="run('cors')">CORS</button>
+      <button onclick="run('cookies')">Cookies</button>
+      <button onclick="run('methods')">HTTP Methods</button>
+      <button onclick="run('tls_deep')">TLS Deep</button>
+      <button onclick="run('ct')">Cert Transparency</button>
+      <button onclick="run('wayback')">Wayback</button>
+      <button onclick="run('geo')">IP / ASN</button>
+      <button onclick="run('takeover')">Takeover</button>
+      <button class="accent" onclick="showHistory()">📊 История</button>
+    </div>
+  </div>
+
+  <div id="result"></div>
+</main>
+
+<script>
+const API = "";
+const el = (t, c, h) => {
+  const e = document.createElement(t);
+  if (c) e.className = c;
+  if (h !== undefined) e.innerHTML = h;
+  return e;
+};
+
+const PORT_INFO = {
+  21:{n:"FTP",r:"warn",t:"FTP передаёт пароли в открытом виде. Замените на SFTP."},
+  22:{n:"SSH",r:"ok",t:"SSH. Используйте ключи, запретите root-логин."},
+  23:{n:"Telnet",r:"bad",t:"ОПАСНО! Telnet без шифрования. Отключите."},
+  25:{n:"SMTP",r:"warn",t:"Проверьте, что нет открытого релея."},
+  53:{n:"DNS",r:"warn",t:"Открытый резолвер → DNS-амплификация."},
+  80:{n:"HTTP",r:"warn",t:"HTTP без шифрования. Нужен редирект на HTTPS."},
+  110:{n:"POP3",r:"warn",t:"Должен использоваться только с TLS."},
+  143:{n:"IMAP",r:"warn",t:"Должен использоваться только с TLS."},
+  443:{n:"HTTPS",r:"ok",t:"Стандартный защищённый веб-порт."},
+  445:{n:"SMB",r:"bad",t:"ОПАСНО! SMB наружу — риск EternalBlue."},
+  3306:{n:"MySQL",r:"bad",t:"ОПАСНО! БД не должна быть доступна из интернета."},
+  3389:{n:"RDP",r:"bad",t:"ОПАСНО! RDP — цель брутфорса и ransomware."},
+  5432:{n:"PostgreSQL",r:"bad",t:"ОПАСНО! БД не должна быть доступна из интернета."},
+  8080:{n:"HTTP-alt",r:"warn",t:"Часто админки/прокси без защиты."},
+  8443:{n:"HTTPS-alt",r:"warn",t:"Проверьте, что это не тестовая панель."},
+};
+const HEADER_INFO = {
+  "Strict-Transport-Security":{t:"HSTS — браузер всегда использует HTTPS."},
+  "Content-Security-Policy":{t:"CSP — главная защита от XSS."},
+  "X-Frame-Options":{t:"Защита от clickjacking."},
+  "X-Content-Type-Options":{t:"Запрет MIME-sniffing."},
+  "Referrer-Policy":{t:"Управляет referrer при переходах."},
+  "Permissions-Policy":{t:"Ограничивает доступ к камере/микрофону/гео."},
+};
+
+const CATEGORY_LABELS = {
+  network: "Сеть", web: "Web", crypto: "Крипто",
+  email: "Email", leak: "Утечки", takeover: "Takeover",
+};
+
+const DIR_CAT_LABELS = {
+  admin: "🔐 Админки", auth: "🔑 Логины", api: "📁 API",
+  config: "⚙️ Конфиги", backup: "💾 Бэкапы", debug: "🐛 Debug",
+  monitoring: "📊 Мониторинг", cms: "📝 CMS", common: "🌐 Общие", old: "🗄️ Старые",
+};
+
+/* ── Loader ────────────────────────────────── */
+function renderLoader(text = "Сканирую") {
+  const w = el("div", "loader-wrap");
+  w.appendChild(el("div", "loader-ring"));
+  w.appendChild(el("div", "loader-text", text + "…"));
+  return w;
+}
+
+/* ── Score Hero ─────────────────────────────── */
+function renderScore(scan) {
+  const rs = scan.risk_score || {};
+  const hero = el("div", "score-hero");
+
+  const circle = el("div", "score-circle " + (rs.color || "yellow"));
+  circle.appendChild(el("div", "value", String(rs.score ?? "?")));
+  circle.appendChild(el("div", "max", "/ 100"));
+  hero.appendChild(circle);
+
+  const info = el("div", "score-info");
+  const h = el("h2");
+  h.innerHTML = `Оценка безопасности: ${rs.score ?? "?"}/100`;
+  info.appendChild(h);
+
+  const critCount = rs.critical_count || 0;
+  const ratingText = `${rs.label || ""} · рейтинг ${rs.rating || "?"}` +
+                     (critCount ? ` · критических проблем: ${critCount}` : "");
+  info.appendChild(el("div", "rating", ratingText));
+
+  const pen = el("div", "penalties");
+  if (rs.penalties && rs.penalties.length) {
+    pen.appendChild(el("div", "pen-title", "Штрафы:"));
+    rs.penalties.forEach(x => {
+      const item = el("div", "pen-item");
+      item.textContent = x;
+      pen.appendChild(item);
+    });
+  } else {
+    pen.appendChild(el("div", "pen-title", "Штрафов нет — отличная конфигурация!"));
+  }
+  info.appendChild(pen);
+  hero.appendChild(info);
+  return hero;
+}
+
+/* ── Categories ─────────────────────────────── */
+function renderCategories(rs) {
+  const cats = rs.categories || {};
+  const keys = Object.keys(cats).filter(k => cats[k] > 0);
+  if (!keys.length) return null;
+
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">📊</span> Штрафы по категориям'));
+
+  const grid = el("div", "categories-grid");
+  Object.entries(cats).forEach(([cat, val]) => {
+    const cls = val === 0 ? "ok" : val >= 20 ? "bad" : "warn";
+    const card = el("div", "cat-card");
+    card.appendChild(el("div", "cat-name", CATEGORY_LABELS[cat] || cat));
+    card.appendChild(el("div", "cat-value " + cls, `−${val}`));
+    grid.appendChild(card);
+  });
+  wrap.appendChild(grid);
+  return wrap;
+}
+
+/* ── Critical banner ────────────────────────── */
+function renderCritical(rs) {
+  const issues = rs.critical_issues || [];
+  if (!issues.length) return null;
+
+  const b = el("div", "critical-banner");
+  b.appendChild(el("h3", "", `🔴 Критические проблемы (${issues.length})`));
+  issues.forEach(i => b.appendChild(el("div", "issue", i)));
+  return b;
+}
+
+/* ── Diff ───────────────────────────────────── */
+function renderDiff(diff) {
+  if (!diff || !diff.changes || !diff.changes.length) return null;
+  const b = el("div", "diff-banner");
+  b.appendChild(el("h3", "", `📊 Изменения с прошлого скана · ${diff.previous_scan_at?.slice(0,19).replace('T',' ') || "?"}`));
+  diff.changes.forEach(c => b.appendChild(el("div", "change", c.message)));
+  return b;
+}
+
+/* ══════════════════════════════════════════════
+   RENDERERS
+   ══════════════════════════════════════════════ */
+
+function renderPorts(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">🔌</span> Порты'));
+  const open = data.filter(p => p.state === "open");
+  const s = el("div", "summary " + (open.length ? "warn" : "good"));
+  s.textContent = open.length
+    ? `Открыто портов: ${open.length} из ${data.length}`
+    : "Все проверенные порты закрыты.";
+  wrap.appendChild(s);
+
+  data.forEach(p => {
+    const info = PORT_INFO[p.port] || {n:"?",r:"warn",t:""};
+    const isOpen = p.state === "open";
+    const cls = isOpen ? (info.r === "bad" ? "bad" : info.r === "warn" ? "warn" : "ok") : "";
+    wrap.appendChild(el("div", "item", `
+      <div class="key">${p.port} / ${info.n}</div>
+      <div class="val ${cls}">${isOpen ? "● открыт" : "○ закрыт"}
+        ${isOpen ? `<span class="explain">${info.t}</span>` : ""}
+      </div>`));
+  });
+  return wrap;
+}
+
+function renderHeaders(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">📋</span> HTTP-заголовки'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+
+  const missing = data.missing_headers || [];
+  const s = el("div", "summary " + (missing.length === 0 ? "good" : missing.length <= 2 ? "warn" : "bad"));
+  s.textContent = missing.length
+    ? `Отсутствует ${missing.length} заголовков`
+    : "Все рекомендуемые заголовки присутствуют";
+  wrap.appendChild(s);
+
+  if (Object.keys(data.present_headers || {}).length) {
+    const sec = el("div", "section");
+    sec.appendChild(el("h3", "", '<span class="icon">✓</span> Присутствуют'));
+    for (const [h, v] of Object.entries(data.present_headers)) {
+      sec.appendChild(el("div", "item", `
+        <div class="key">${h}</div>
+        <div class="val ok">${v}
+          <span class="explain">${HEADER_INFO[h]?.t || ""}</span>
+        </div>`));
+    }
+    wrap.appendChild(sec);
+  }
+  if (missing.length) {
+    const sec = el("div", "section");
+    sec.appendChild(el("h3", "", '<span class="icon">!</span> Отсутствуют'));
+    missing.forEach(h => sec.appendChild(el("div", "item", `
+      <div class="key">${h}</div>
+      <div class="val bad">не задан
+        <span class="explain">${HEADER_INFO[h]?.t || ""}</span>
+      </div>`)));
+    wrap.appendChild(sec);
+  }
+  return wrap;
+}
+
+function renderSSL(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">🔐</span> SSL/TLS'));
+  if (!data.valid) {
+    wrap.appendChild(el("div", "summary bad", `Сертификат невалиден: ${data.error || ""}`));
+    return wrap;
+  }
+  let daysLeft = null;
+  try { daysLeft = Math.floor((new Date(data.not_after) - new Date()) / 86400000); } catch(e){}
+  const cls = daysLeft === null ? "warn" : daysLeft < 0 ? "bad" : daysLeft < 30 ? "warn" : "good";
+  wrap.appendChild(el("div", "summary " + cls,
+    daysLeft === null ? "Сертификат получен."
+    : daysLeft < 0 ? `Просрочен на ${-daysLeft} дн.`
+    : `Действителен ещё ${daysLeft} дн.`));
+
+  wrap.appendChild(el("div", "item", `<div class="key">Subject</div><div class="val">${JSON.stringify(data.subject)}</div>`));
+  wrap.appendChild(el("div", "item", `<div class="key">Issuer</div><div class="val">${JSON.stringify(data.issuer)}</div>`));
+  wrap.appendChild(el("div", "item", `<div class="key">Протокол</div><div class="val">${data.protocol || "?"}</div>`));
+  wrap.appendChild(el("div", "item", `<div class="key">Шифр</div><div class="val">${data.cipher || "?"}</div>`));
+  wrap.appendChild(el("div", "item", `<div class="key">Действует до</div><div class="val">${data.not_after}</div>`));
+  return wrap;
+}
+
+function renderDNS(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">🌐</span> DNS-записи'));
+  const labels = {
+    A:"IPv4", AAAA:"IPv6", MX:"Почтовые серверы", TXT:"Текстовые записи",
+    NS:"NS-серверы", CAA:"Кто может выдавать SSL"
+  };
+  Object.entries(labels).forEach(([t, label]) => {
+    const vals = data[t] || [];
+    const sec = el("div", "section");
+    sec.appendChild(el("h3", "", `<span class="icon">${t}</span> ${label}`));
+    if (!vals.length) sec.appendChild(el("div", "item", `<div class="val warn">нет записей</div>`));
+    else vals.forEach(v => sec.appendChild(el("div", "item", `<div class="val">${v}</div>`)));
+    wrap.appendChild(sec);
+  });
+  return wrap;
+}
+
+function renderWhois(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">📇</span> WHOIS'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+  const fields = [["registrar","Регистратор"],["creation_date","Создан"],["expiration_date","Истекает"],["name_servers","NS"]];
+  fields.forEach(([k, l]) => {
+    const v = data[k];
+    wrap.appendChild(el("div", "item", `<div class="key">${l}</div><div class="val">${
+      v ? (Array.isArray(v) ? v.join("<br>") : v) : "—"}</div>`));
+  });
+  return wrap;
+}
+
+function renderSubdomains(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">🌐</span> Поддомены · crt.sh'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+  const s = el("div", "summary " + (data.count > 0 ? "warn" : "good"));
+  s.textContent = data.count > 0
+    ? `Найдено ${data.count} поддоменов — проверьте, что все должны быть публичными.`
+    : "Поддомены не найдены.";
+  wrap.appendChild(s);
+  const grid = el("div", "grid");
+  (data.subdomains || []).forEach(s => grid.appendChild(el("div", "chip", s)));
+  wrap.appendChild(grid);
+  return wrap;
+}
+
+function renderEmail(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">📧</span> Email Security'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+  const s = el("div", "summary " + (data.score >= 70 ? "good" : data.score >= 40 ? "warn" : "bad"));
+  s.textContent = `Оценка: ${data.score}/100. ${
+    data.spoofable ? "Возможна подделка писем!" : "Подделать письмо сложно."}`;
+  wrap.appendChild(s);
+
+  wrap.appendChild(el("div", "item", `
+    <div class="key">SPF</div>
+    <div class="val ${data.spf ? 'ok' : 'bad'}">${data.spf || "не настроен"}
+      <span class="explain">Список серверов, которым разрешено отправлять почту от домена.</span>
+    </div>`));
+  wrap.appendChild(el("div", "item", `
+    <div class="key">DMARC</div>
+    <div class="val ${data.dmarc ? (data.dmarc_policy === 'none' ? 'warn' : 'ok') : 'bad'}">${data.dmarc || "не настроен"}
+      <span class="explain">Политика для писем, не прошедших SPF/DKIM: ${data.dmarc_policy}.</span>
+    </div>`));
+  wrap.appendChild(el("div", "item", `
+    <div class="key">DKIM селекторы</div>
+    <div class="val ${(data.dkim_selectors || []).length ? 'ok' : 'warn'}">${
+      (data.dkim_selectors || []).length ? data.dkim_selectors.join(", ") : "не найдены"}
+      <span class="explain">DKIM криптографически подписывает письма.</span>
+    </div>`));
+  return wrap;
+}
+
+function renderWAF(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">🕵️</span> WAF / CDN'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+  if (!data.has_waf) {
+    wrap.appendChild(el("div", "summary warn", "WAF/CDN не обнаружен. Сайт может быть напрямую уязвим для атак."));
+    return wrap;
+  }
+  wrap.appendChild(el("div", "summary good", `Обнаружен: ${data.detected.map(d => d.name).join(", ")}`));
+  data.detected.forEach(d => wrap.appendChild(el("div", "item", `
+    <div class="key">${d.name}</div>
+    <div class="val ok">сигнатура: ${d.matched}</div>`)));
+  return wrap;
+}
+
+function renderTech(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">🧬</span> Технологии'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+  wrap.appendChild(el("div", "item", `<div class="key">Server</div><div class="val">${data.server || "—"}</div>`));
+  wrap.appendChild(el("div", "item", `<div class="key">X-Powered-By</div><div class="val">${data.powered_by || "—"}</div>`));
+  if (data.generator)
+    wrap.appendChild(el("div", "item", `<div class="key">Meta generator</div><div class="val">${data.generator}</div>`));
+
+  if (!(data.technologies || []).length) {
+    wrap.appendChild(el("div", "summary warn", "Технологии не определены."));
+  } else {
+    const grid = el("div", "grid");
+    data.technologies.forEach(t => grid.appendChild(el("div", "chip highlight", `${t.name} · ${t.matched}`)));
+    wrap.appendChild(grid);
+  }
+  return wrap;
+}
+
+function renderSensitive(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">📁</span> Sensitive Files'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+
+  const found = data.found || [];
+  const harmless = ["/robots.txt", "/sitemap.xml", "/.well-known/security.txt"];
+  const dangerous = found.filter(f => !harmless.includes(f.path));
+
+  const s = el("div", "summary " + (dangerous.length ? "bad" : "good"));
+  s.textContent = dangerous.length
+    ? `Найдено ${dangerous.length} потенциально опасных публично доступных файлов!`
+    : "Опасных публичных файлов не найдено.";
+  wrap.appendChild(s);
+
+  if (found.length) {
+    const sec = el("div", "section");
+    sec.appendChild(el("h3", "", `<span class="icon">${found.length}</span> Найдено файлов`));
+    found.forEach(f => {
+      const isHarmless = harmless.includes(f.path);
+      sec.appendChild(el("div", "item", `
+        <div class="key">${f.path}</div>
+        <div class="val ${isHarmless ? 'ok' : 'bad'}">HTTP ${f.status} · ${f.size} B
+          <span class="explain">${
+            isHarmless ? "Обычный публичный файл." :
+            "Файл доступен из интернета. Проверьте содержимое и закройте доступ!"
+          }</span>
+        </div>`));
+    });
+    wrap.appendChild(sec);
+  }
+  return wrap;
+}
+
+function renderDirectories(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">📂</span> Directory Brute-Force'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+
+  const found = data.found || [];
+  const crit = data.critical || [];
+
+  if (data.source) {
+    wrap.appendChild(el("div", "item", `
+      <div class="key">Источник словаря</div>
+      <div class="val">${data.source} · ${data.checked} путей</div>`));
+  }
+
+  const s = el("div", "summary " + (found.length ? (crit.length ? "bad" : "warn") : "good"));
+  s.textContent = found.length
+    ? `Найдено ${found.length} доступных путей${crit.length ? ` (${crit.length} КРИТИЧНЫХ!)` : ""} из ${data.checked} проверенных`
+    : `Все ${data.checked} путей защищены`;
+  wrap.appendChild(s);
+
+  if (data.errors) {
+    wrap.appendChild(el("div", "item", `
+      <div class="key">Ошибок при проверке</div>
+      <div class="val warn">${data.errors}</div>`));
+  }
+
+  if (crit.length) {
+    const sec = el("div", "section");
+    sec.appendChild(el("h3", "", `<span class="icon">🚨</span> Критичные находки (${crit.length})`));
+    crit.forEach(f => {
+      sec.appendChild(el("div", "item", `
+        <div class="key">${f.path}</div>
+        <div class="val bad">HTTP ${f.status} · ${f.size} B
+          <span class="explain">${f.content_type || "—"}</span>
+        </div>`));
+    });
+    wrap.appendChild(sec);
+  }
+
+  Object.entries(data.by_category || {}).forEach(([cat, items]) => {
+    const sec = el("div", "section");
+    const label = DIR_CAT_LABELS[cat] || cat;
+    sec.appendChild(el("h3", "", `<span class="icon">${label.split(" ")[0] || "•"}</span> ${label} (${items.length})`));
+    items.forEach(f => {
+      const cls = f.critical ? "bad" : f.status === 200 ? "warn" : "";
+      const loc = f.location ? ` → ${f.location}` : "";
+      sec.appendChild(el("div", "item", `
+        <div class="key">${f.path}</div>
+        <div class="val ${cls}">HTTP ${f.status}${loc} · ${f.size} B</div>`));
+    });
+    wrap.appendChild(sec);
+  });
+
+  return wrap;
+}
+
+function renderCORS(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">🌐</span> CORS'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+
+  const cls = data.vulnerable ? "bad" : data.suspicious ? "warn" : "good";
+  const s = el("div", "summary " + cls);
+  s.textContent = data.summary || (data.vulnerable ? "CORS уязвим!" : "CORS в порядке.");
+  wrap.appendChild(s);
+
+  if (data.stats) {
+    const st = data.stats;
+    const sec = el("div", "section");
+    sec.appendChild(el("h3", "", '<span class="icon">📊</span> Статистика'));
+    sec.appendChild(el("div", "item", `
+      <div class="key">Vulnerable</div>
+      <div class="val ${st.vulnerable ? 'bad' : 'ok'}">${st.vulnerable}</div>`));
+    sec.appendChild(el("div", "item", `
+      <div class="key">Null allowed</div>
+      <div class="val ${st.null_allowed ? 'warn' : 'ok'}">${st.null_allowed}</div>`));
+    sec.appendChild(el("div", "item", `
+      <div class="key">Reflect (no creds)</div>
+      <div class="val ${st.reflect_no_creds ? 'warn' : 'ok'}">${st.reflect_no_creds}</div>`));
+    sec.appendChild(el("div", "item", `
+      <div class="key">Wildcard</div>
+      <div class="val ${st.wildcard ? 'warn' : 'ok'}">${st.wildcard}</div>`));
+    sec.appendChild(el("div", "item", `
+      <div class="key">Всего проверок</div>
+      <div class="val">${st.total}</div>`));
+    wrap.appendChild(sec);
+  }
+
+  if ((data.checks || []).length) {
+    const det = el("div", "section");
+    det.appendChild(el("h3", "", '<span class="icon">🔍</span> Детали'));
+    data.checks.forEach(c => {
+      if (c.error) {
+        det.appendChild(el("div", "item", `
+          <div class="key">${c.method || "?"} · ${c.origin_sent || "?"}</div>
+          <div class="val bad">Ошибка: ${c.error}</div>`));
+        return;
+      }
+      const vCls = {
+        vulnerable: "bad", null_allowed: "bad",
+        reflect_no_creds: "warn", wildcard: "warn", ok: "ok",
+      }[c.verdict] || "";
+      const verdictLabel = {
+        vulnerable: "🔴 УЯЗВИМО",
+        null_allowed: "🟠 null разрешён",
+        reflect_no_creds: "🟡 отражает Origin",
+        wildcard: "🟡 wildcard",
+        ok: "✅ ок",
+      }[c.verdict] || "?";
+      det.appendChild(el("div", "item", `
+        <div class="key">${c.method} · ${c.origin_sent}</div>
+        <div class="val ${vCls}">
+          HTTP ${c.status} · ${verdictLabel}
+          <span class="explain">
+            ACAO: ${c.acao || "—"} · ACAC: ${c.acac || "—"}
+          </span>
+        </div>`));
+    });
+    wrap.appendChild(det);
+  }
+  return wrap;
+}
+
+function renderCookies(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">🍪</span> Cookie Flags'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+
+  const unsafe = data.unsafe || 0;
+  const total = data.total || 0;
+  const s = el("div", "summary " + (unsafe ? "bad" : "good"));
+  s.textContent = unsafe
+    ? `Из ${total} cookies — ${unsafe} без нужных флагов безопасности`
+    : `Все ${total} cookies настроены корректно`;
+  wrap.appendChild(s);
+
+  (data.cookies || []).forEach(c => {
+    const cls = c.safe ? "ok" : "bad";
+    const f = c.flags || {};
+    wrap.appendChild(el("div", "item", `
+      <div class="key">${c.name}</div>
+      <div class="val ${cls}">
+        Secure: ${f.secure ? "✓" : "✗"} ·
+        HttpOnly: ${f.httponly ? "✓" : "✗"} ·
+        SameSite: ${f.samesite || "—"}
+        ${(c.issues || []).length ? `<span class="explain">${c.issues.join(" · ")}</span>` : ""}
+      </div>`));
+  });
+  return wrap;
+}
+
+function renderMethods(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">🔧</span> HTTP-методы'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+
+  const dangerous = data.dangerous || [];
+  const s = el("div", "summary " + (dangerous.length ? "bad" : "good"));
+  s.textContent = dangerous.length
+    ? `Опасных методов: ${dangerous.length} — ${dangerous.map(d => d.method).join(", ")}`
+    : "Опасных HTTP-методов не обнаружено";
+  wrap.appendChild(s);
+
+  if (data.options_advertised?.length) {
+    wrap.appendChild(el("div", "item", `
+      <div class="key">Advertised by OPTIONS</div>
+      <div class="val">${data.options_advertised.join(", ")}</div>`));
+  }
+
+  const grid = el("div", "grid");
+  (data.checks || []).forEach(c => {
+    const cls = c.dangerous ? "bad" : c.allowed ? "ok" : "";
+    grid.appendChild(el("div", "chip " + cls, `${c.method} · ${c.status || "—"}`));
+  });
+  wrap.appendChild(grid);
+  return wrap;
+}
+
+function renderTLSDeep(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">🔐</span> TLS Deep Analysis'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+
+  const issues = data.issues || [];
+  const s = el("div", "summary " + (data.safe ? "good" : "bad"));
+  s.textContent = data.safe
+    ? "TLS-конфигурация безопасна"
+    : `Проблемы: ${issues.join(" · ")}`;
+  wrap.appendChild(s);
+
+  const supported = data.supported_protocols || [];
+  const weak = data.weak_protocols || [];
+  wrap.appendChild(el("div", "item", `
+    <div class="key">Поддерживаемые протоколы</div>
+    <div class="val">${supported.join(", ") || "—"}
+      ${weak.length ? `<span class="explain">⚠️ Устаревшие: ${weak.join(", ")}</span>` : ""}
+    </div>`));
+
+  if (data.certificate && !data.certificate.error) {
+    const c = data.certificate;
+    wrap.appendChild(el("div", "item", `<div class="key">Сертификат Subject</div><div class="val">${c.subject}</div>`));
+    wrap.appendChild(el("div", "item", `<div class="key">Issuer</div><div class="val">${c.issuer}</div>`));
+    wrap.appendChild(el("div", "item", `<div class="key">Действует до</div><div class="val">${c.not_valid_after}</div>`));
+    if (c.public_key_size)
+      wrap.appendChild(el("div", "item", `<div class="key">Ключ</div><div class="val">${c.public_key_size} бит</div>`));
+  }
+
+  if (data.heartbleed_vulnerable !== null && data.heartbleed_vulnerable !== undefined) {
+    wrap.appendChild(el("div", "item", `
+      <div class="key">Heartbleed</div>
+      <div class="val ${data.heartbleed_vulnerable ? 'bad' : 'ok'}">${
+        data.heartbleed_vulnerable ? "⚠️ УЯЗВИМ" : "не уязвим"}</div>`));
+  }
+  if (data.robot) {
+    const rCls = String(data.robot).toUpperCase().includes("VULNERABLE") ? "bad" : "ok";
+    wrap.appendChild(el("div", "item", `<div class="key">ROBOT</div><div class="val ${rCls}">${data.robot}</div>`));
+  }
+  return wrap;
+}
+
+function renderCT(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">📜</span> Certificate Transparency'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+
+  const s = el("div", "summary warn");
+  s.textContent = `Всего сертификатов: ${data.total_certificates} · Уникальных доменов: ${data.unique_domains}`;
+  wrap.appendChild(s);
+
+  if (Object.keys(data.issuers || {}).length) {
+    const sec = el("div", "section");
+    sec.appendChild(el("h3", "", '<span class="icon">🏛</span> Издатели'));
+    Object.entries(data.issuers).forEach(([iss, cnt]) => {
+      sec.appendChild(el("div", "item", `
+        <div class="key">${iss}</div>
+        <div class="val">${cnt} сертификат(ов)</div>`));
+    });
+    wrap.appendChild(sec);
+  }
+
+  if (data.all_domains?.length) {
+    const sec = el("div", "section");
+    sec.appendChild(el("h3", "", `<span class="icon">🌐</span> Домены (${data.all_domains.length})`));
+    const grid = el("div", "grid");
+    data.all_domains.slice(0, 100).forEach(d => grid.appendChild(el("div", "chip", d)));
+    sec.appendChild(grid);
+    wrap.appendChild(sec);
+  }
+  return wrap;
+}
+
+function renderWayback(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">🕰</span> Wayback Machine'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+
+  const s = el("div", "summary " + (data.total ? "warn" : "good"));
+  s.textContent = data.total
+    ? `Найдено ${data.total} архивных URL — проверьте, что там нет чувствительных страниц`
+    : "Архивных URL не найдено";
+  wrap.appendChild(s);
+
+  if (data.interesting?.length) {
+    const sec = el("div", "section");
+    sec.appendChild(el("h3", "", `<span class="icon">⭐</span> Интересные URL (${data.interesting.length})`));
+    data.interesting.forEach(u => sec.appendChild(el("div", "item", `
+      <div class="key">${u.timestamp?.slice(0,8) || ""}</div>
+      <div class="val warn">${u.url}
+        <span class="explain">HTTP ${u.status}</span>
+      </div>`)));
+    wrap.appendChild(sec);
+  }
+
+  if (data.urls?.length) {
+    const sec = el("div", "section");
+    sec.appendChild(el("h3", "", '<span class="icon">📦</span> Последние архивы'));
+    data.urls.slice(0, 30).forEach(u => sec.appendChild(el("div", "item", `
+      <div class="key">${u.timestamp?.slice(0,8) || ""}</div>
+      <div class="val">${u.url}</div>`)));
+    wrap.appendChild(sec);
+  }
+  return wrap;
+}
+
+function renderGeo(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">🌍</span> IP / ASN'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+
+  const rows = [
+    ["IP-адрес", data.ip],
+    ["Страна", `${data.country || "—"} ${data.country_code ? `(${data.country_code})` : ""}`],
+    ["Регион", data.region],
+    ["Город", data.city],
+    ["Провайдер", data.isp],
+    ["Организация", data.org],
+    ["ASN", data.asn],
+    ["ASN Name", data.asn_name],
+    ["Reverse DNS", data.reverse_dns],
+  ];
+  rows.forEach(([k, v]) => {
+    if (v === undefined || v === null || v === "") return;
+    wrap.appendChild(el("div", "item", `
+      <div class="key">${k}</div>
+      <div class="val">${v}</div>`));
+  });
+
+  const flags = [];
+  if (data.is_proxy)   flags.push("⚠️ Proxy/VPN");
+  if (data.is_hosting) flags.push("Hosting/Datacenter");
+  if (data.is_mobile)  flags.push("Mobile");
+  if (flags.length) {
+    wrap.appendChild(el("div", "summary warn", flags.join(" · ")));
+  }
+  return wrap;
+}
+
+function renderTakeover(data) {
+  const wrap = el("div", "section");
+  wrap.appendChild(el("h3", "", '<span class="icon">💀</span> Subdomain Takeover'));
+  if (data.error) { wrap.appendChild(el("div", "error-box", data.error)); return wrap; }
+
+  const vuln = data.vulnerable || [];
+  const s = el("div", "summary " + (vuln.length ? "bad" : "good"));
+  s.textContent = vuln.length
+    ? `⚠️ УЯЗВИМО: ${vuln.length} поддоменов допускают takeover!`
+    : `Проверено ${data.checked || 0} поддоменов — уязвимостей не найдено`;
+  wrap.appendChild(s);
+
+  if (data.errors) {
+    wrap.appendChild(el("div", "item", `
+      <div class="key">Ошибок при проверке</div>
+      <div class="val warn">${data.errors}</div>`));
+  }
+
+  vuln.forEach(v => wrap.appendChild(el("div", "item", `
+    <div class="key">${v.subdomain}</div>
+    <div class="val bad">CNAME → ${v.cname || "?"} · ${v.service || "?"}
+      <span class="explain">⚠️ ${v.reason || "Найдена сигнатура takeover"}${v.status ? ` · HTTP ${v.status}` : ""}</span>
+    </div>`)));
+  return wrap;
+}
+
+/* ══════════════════════════════════════════════
+   Полный скан
+   ══════════════════════════════════════════════ */
+
+function renderFull(scan) {
+  const root = document.getElementById("result");
+  root.innerHTML = "";
+
+  if (scan.risk_score) root.appendChild(renderScore(scan));
+  const crit = renderCritical(scan.risk_score || {});
+  if (crit) root.appendChild(crit);
+
+  if (scan.proxy_used && scan.proxy_stats) {
+    const pb = el("div", "diff-banner");
+    pb.appendChild(el("h3", "", "🔀 Скан выполнен через прокси"));
+    pb.appendChild(el("div", "change",
+      `Живых прокси: ${scan.proxy_stats.alive} из ${scan.proxy_stats.total}`));
+    root.appendChild(pb);
+  }
+
+  const diff = renderDiff(scan.diff);
+  if (diff) root.appendChild(diff);
+  const cats = renderCategories(scan.risk_score || {});
+  if (cats) root.appendChild(cats);
+
+  const sections = [
+    ["ports",    "🔌 Порты",      () => renderPorts(scan.ports || [])],
+    ["headers",  "📋 Заголовки",  () => renderHeaders(scan.headers || {})],
+    ["ssl",      "🔐 SSL",        () => renderSSL(scan.ssl || {})],
+    ["tlsdeep",  "🔐 TLS Deep",   () => renderTLSDeep(scan.tls_deep || {})],
+    ["cors",     "🌐 CORS",       () => renderCORS(scan.cors || {})],
+    ["cookies",  "🍪 Cookies",    () => renderCookies(scan.cookies || {})],
+    ["methods",  "🔧 Methods",    () => renderMethods(scan.http_methods || {})],
+    ["dirs",     "📂 Пути",       () => renderDirectories(scan.directory_scan || {})],
+    ["takeover", "💀 Takeover",   () => renderTakeover(scan.subdomain_takeover || {vulnerable:[]})],
+    ["subs",     "🌐 Поддомены",  () => renderSubdomains(scan.subdomains || {subdomains:[]})],
+    ["ct",       "📜 CT Logs",    () => renderCT(scan.cert_transparency || {})],
+    ["wayback",  "🕰 Wayback",    () => renderWayback(scan.wayback || {urls:[]})],
+    ["geo",      "🌍 IP / ASN",   () => renderGeo(scan.ip_geo || {})],
+    ["email",    "📧 Email",      () => renderEmail(scan.email_sec || {})],
+    ["waf",      "🕵️ WAF",        () => renderWAF(scan.waf || {detected:[]})],
+    ["tech",     "🧬 Технологии", () => renderTech(scan.tech || {technologies:[]})],
+    ["sens",     "📁 Файлы",      () => renderSensitive(scan.sensitive_files || {found:[]})],
+    ["dns",      "🌐 DNS",        () => renderDNS(scan.dns || {})],
+  ];
+
+  const tabs = el("div", "tabs");
+  const content = el("div");
+  let active = "ports";
+
+  function show(id) {
+    active = id;
+    content.innerHTML = "";
+    const s = sections.find(x => x[0] === id);
+    if (s) content.appendChild(s[2]());
+    [...tabs.children].forEach(b => b.classList.toggle("active", b.dataset.id === id));
+  }
+  sections.forEach(([id, label]) => {
+    const b = el("button", "", label);
+    b.dataset.id = id;
+    b.onclick = () => show(id);
+    tabs.appendChild(b);
+  });
+  root.appendChild(tabs);
+  root.appendChild(content);
+  show(active);
+
+  const d = el("details", "raw");
+  d.appendChild(el("summary", "", "🔎 Сырой JSON"));
+  d.appendChild(el("pre", "", JSON.stringify(scan, null, 2)));
+  root.appendChild(d);
+}
+
+function renderSingle(kind, data) {
+  const root = document.getElementById("result");
+  root.innerHTML = "";
+  const map = {
+    ports:       () => renderPorts(data.result || []),
+    headers:     () => renderHeaders(data.result || {}),
+    ssl:         () => renderSSL(data.result || {}),
+    dns:         () => renderDNS(data.result || {}),
+    whois:       () => renderWhois(data.result || {}),
+    subdomains:  () => renderSubdomains(data.result || {}),
+    email:       () => renderEmail(data.result || {}),
+    waf:         () => renderWAF(data.result || {}),
+    tech:        () => renderTech(data.result || {}),
+    sensitive:   () => renderSensitive(data.result || {}),
+    directories: () => renderDirectories(data.result || {}),
+    cors:        () => renderCORS(data.result || {}),
+    cookies:     () => renderCookies(data.result || {}),
+    methods:     () => renderMethods(data.result || {}),
+    tls_deep:    () => renderTLSDeep(data.result || {}),
+    ct:          () => renderCT(data.result || {}),
+    wayback:     () => renderWayback(data.result || {}),
+    geo:         () => renderGeo(data.result || {}),
+    takeover:    () => renderTakeover(data.result || {}),
+  };
+  const fn = map[kind];
+  if (fn) root.appendChild(fn());
+
+  const d = el("details", "raw");
+  d.appendChild(el("summary", "", "🔎 Сырой JSON"));
+  d.appendChild(el("pre", "", JSON.stringify(data, null, 2)));
+  root.appendChild(d);
+}
+
+/* ── История ────────────────────────────────── */
+async function showHistory() {
+  const target = document.getElementById("target").value.trim();
+  if (!target) return alert("Введите цель");
+  const root = document.getElementById("result");
+  root.innerHTML = "";
+  root.appendChild(renderLoader("Загружаю историю"));
+
+  try {
+    const r = await fetch(`${API}/api/history/${encodeURIComponent(target)}?limit=20`);
+    const data = await r.json();
+    if (!r.ok) { root.innerHTML = ""; root.appendChild(el("div", "error-box", data.detail || "ошибка")); return; }
+
+    root.innerHTML = "";
+    const wrap = el("div", "section");
+    wrap.appendChild(el("h3", "", `<span class="icon">📊</span> История сканов · ${data.target}`));
+    if (!data.scans.length) {
+      wrap.appendChild(el("div", "summary warn", "История пуста."));
+    } else {
+      data.scans.forEach(s => {
+        const cls = s.score >= 75 ? "ok" : s.score >= 50 ? "warn" : "bad";
+        wrap.appendChild(el("div", "item", `
+          <div class="key">#${s.id} · ${s.created_at.slice(0,19).replace('T',' ')}</div>
+          <div class="val ${cls}">Score: ${s.score ?? "?"} · рейтинг ${s.rating || "?"}</div>`));
+      });
+    }
+    root.appendChild(wrap);
+  } catch(e) {
+    root.innerHTML = "";
+    root.appendChild(el("div", "error-box", e.message));
+  }
+}
+
+/* ══════════════════════════════════════════════
+   PROXY
+   ══════════════════════════════════════════════ */
+
+let proxyEnabled = false;
+
+async function toggleProxy() {
+  const checkbox = document.getElementById("useProxy");
+  const status = document.getElementById("proxyStatus");
+
+  proxyEnabled = checkbox.checked;
+
+  if (!proxyEnabled) {
+    status.style.display = "none";
+    return;
+  }
+
+  status.style.display = "block";
+  status.innerHTML = '<div class="loader-wrap" style="padding:20px"><div class="loader-ring"></div><div class="loader-text">Проверяю прокси…</div></div>';
+
+  try {
+    const r = await fetch(`${API}/api/proxies/status`);
+    const data = await r.json();
+    renderProxyStatus(data);
+  } catch (e) {
+    status.innerHTML = `<div class="error-box" style="margin:0">Ошибка проверки прокси: ${e.message}</div>`;
+  }
+}
+
+function renderProxyStatus(data) {
+  const status = document.getElementById("proxyStatus");
+  status.innerHTML = "";
+
+  const total = data.total || 0;
+  const alive = data.alive || 0;
+
+  const summary = el("div", "proxy-summary");
+  if (!data.enabled_globally) {
+    summary.innerHTML = '⚠️ Прокси не настроены — добавь их в <code>core/config.py</code> → <code>PROXIES</code>';
+  } else if (alive === 0) {
+    summary.innerHTML = `<span class="bad">✗ Ни один прокси не работает (0 из ${total})</span>`;
+  } else {
+    summary.innerHTML = `<span class="ok">✓ Работают ${alive} из ${total}</span>`;
+  }
+  status.appendChild(summary);
+
+  (data.proxies || []).forEach((p, i) => {
+    const item = el("div", "proxy-item");
+
+    const dot = el("div", "proxy-dot " + (p.alive ? "alive" : "dead"));
+    item.appendChild(dot);
+
+    const url = el("div", "proxy-url");
+    let displayUrl = p.url;
+    try {
+      const u = new URL(p.url);
+      if (u.password) u.password = "***";
+      displayUrl = u.toString();
+    } catch (e) {}
+    url.textContent = `[${i + 1}] ${displayUrl}`;
+    item.appendChild(url);
+
+    const meta = el("div", "proxy-meta");
+    if (p.alive) {
+      const parts = [];
+      if (p.exit_ip) parts.push(`IP: ${p.exit_ip}`);
+      if (p.latency_ms !== null) parts.push(`${p.latency_ms}ms`);
+      meta.innerHTML = `<span style="color:#86efac">${parts.join(" · ") || "OK"}</span>`;
+    } else {
+      meta.innerHTML = `<span style="color:#fca5a5">${p.error || "недоступен"}</span>`;
+    }
+    item.appendChild(meta);
+
+    status.appendChild(item);
+  });
+
+  const refresh = el("button", "", "🔄 Проверить снова");
+  refresh.style.marginTop = "10px";
+  refresh.style.fontSize = "12px";
+  refresh.onclick = async () => {
+    status.innerHTML = '<div class="loader-wrap" style="padding:20px"><div class="loader-ring"></div><div class="loader-text">Проверяю…</div></div>';
+    try {
+      const r = await fetch(`${API}/api/proxies/status?force=true`);
+      const data = await r.json();
+      renderProxyStatus(data);
+    } catch (e) {
+      status.innerHTML = `<div class="error-box" style="margin:0">${e.message}</div>`;
+    }
+  };
+  status.appendChild(refresh);
+}
+
+/* ── Run ────────────────────────────────────── */
+async function run(kind) {
+  const target = document.getElementById("target").value.trim();
+  const consent = document.getElementById("consent").checked;
+  const root = document.getElementById("result");
+  if (!target) { root.innerHTML = ""; root.appendChild(el("div", "error-box", "Введите цель.")); return; }
+  if (!consent) { root.innerHTML = ""; root.appendChild(el("div", "error-box", "Подтвердите разрешение.")); return; }
+
+  root.innerHTML = "";
+  const text = kind === "full"
+    ? "Полный скан (1-3 мин)"
+    : kind === "directories"
+    ? "Перебор путей (30-90 сек)"
+    : "Сканирую";
+  root.appendChild(renderLoader(text));
+
+  try {
+    const res = await fetch(`${API}/api/scan/${kind}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        target,
+        consent,
+        use_proxy: proxyEnabled,
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      root.innerHTML = "";
+      root.appendChild(el("div", "error-box", `Ошибка ${res.status}: ${data.detail || JSON.stringify(data)}`));
+      return;
+    }
+    if (kind === "full") renderFull(data);
+    else renderSingle(kind, data);
+  } catch (e) {
+    root.innerHTML = "";
+    root.appendChild(el("div", "error-box", "Сетевая ошибка: " + e.message));
+  }
+}
+</script>
+</body>
+</html>
