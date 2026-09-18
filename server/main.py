@@ -4,6 +4,12 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
+import sys
+import os
+
+# Добавляем директорию 'server' в путь поиска модулей Python
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 
 from core.config import CLIENT_DIR, PROXIES
 from core.security import validate_target, normalize_target, check_consent
