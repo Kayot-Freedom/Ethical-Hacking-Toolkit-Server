@@ -424,16 +424,5 @@ async def root():
         return f.read_text(encoding="utf-8")
     return "<h1>Ethical Hacking API v3.3</h1>"
 
-# ═══════════════════════════════════════════════
-#  Запуск через uvicorn
-# ═══════════════════════════════════════════════
 
-if __name__ == "__main__":
-    import uvicorn
 
-    uvicorn.run(
-        "main:app",          # путь к приложению: модуль:переменная
-        host="0.0.0.0",      # слушать все интерфейсы
-        port=8000,           # порт
-        reload=True,         # авто-перезагрузка при изменении кода
-    )
