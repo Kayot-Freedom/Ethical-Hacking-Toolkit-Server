@@ -6,5 +6,5 @@ python-whois==0.9.4
 dnspython==2.7.0
 aiosqlite==0.20.0
 beautifulsoup4==4.12.3
-sslyze==6.0.0
+sslyze==6.1.0
 httpx[socks]==0.27.2
